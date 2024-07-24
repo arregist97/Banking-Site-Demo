@@ -26,21 +26,20 @@ model Password {
 }
 
 model Account {
-  id              String                @id @default(cuid())
+  id              String            @id @default(cuid())
   type            String
-  routingNumber   String
-  currentBalance  Int                   @default(0)
-  intDeposits     InternalTransaction[] @relation(name: "Deposits")
-  intWithdrawls   InternalTransaction[] @relation(name: "Withdrawls")
-  extTransactions ExternalTransaction[]
+  currentBalance  Int               @default(0)
+  transactions    Transaction[]
+  target          Target            @relation(fields: [targetId], references: [id])
+  targetId        String            @unique
   AccountsOnUsers AccountsOnUsers[]
 }
 
-model InternalTransaction {
-  account      Account      @relation(name: "Withdrawls", fields: [accountId], references: [id])
+model Transaction {
+  account      Account      @relation(fields: [accountId], references: [id])
   accountId    String
   time         DateTime     @default(now())
-  target       Account      @relation(name: "Deposits", fields: [targetId], references: [id])
+  target       Target       @relation(fields: [targetId], references: [id])
   targetId     String
   amount       Int
   revertStatus RevertStatus
@@ -48,24 +47,13 @@ model InternalTransaction {
   @@id([accountId, time, targetId])
 }
 
-model ExternalTransaction {
-  account         Account         @relation(fields: [accountId], references: [id])
-  accountId       String
-  time            DateTime        @default(now())
-  externalAccount ExternalAccount @relation(fields: [externalId], references: [id])
-  externalId      String
-  amount          Int
-  revertStatus    RevertStatus
-
-  @@id([accountId, time, externalId])
-}
-
-model ExternalAccount {
-  id                  String                @id @default(cuid())
-  name                String
-  routingNumber       String
-  transitNumber       String
-  ExternalTransaction ExternalTransaction[]
+model Target {
+  id            String        @id @default(cuid())
+  name          String
+  routingNumber String
+  transitNumber String
+  account       Account?
+  transactions  Transaction[]
 }
 
 model AccountsOnUsers {
@@ -89,4 +77,5 @@ enum Permissions {
   VIEW
   DEPOSIT
   FULL_ACCESS
+  OWNER
 }
