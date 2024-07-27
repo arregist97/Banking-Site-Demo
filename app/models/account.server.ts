@@ -51,7 +51,7 @@ export async function createAccount(
                     id: userId
                   }
                 },
-                userPerms: "OWNER"
+                userPerms: 'OWNER'
               }
             }
             //transaction
