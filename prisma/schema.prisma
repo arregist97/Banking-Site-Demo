@@ -30,8 +30,8 @@ model Account {
   type            String
   currentBalance  Int               @default(0)
   transactions    Transaction[]
-  target          Target            @relation(fields: [targetId], references: [id])
-  targetId        String            @unique
+  target          Target?           @relation(fields: [targetId], references: [id])
+  targetId        String?           @unique
   AccountsOnUsers AccountsOnUsers[]
 }
 
