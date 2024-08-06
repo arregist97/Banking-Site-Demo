@@ -50,9 +50,19 @@ export async function createAccount(userId: string, accountType: string, targetN
   return account;
 }
 
-  export async function closeAccount(accountId: string){
-    //ToDo
-    return null
+  export async function updateAccount(accountId: string, updatedData: {
+    type?: string;
+    currentBalance?: number;
+    targetId?: string;
+  }) {
+    const updatedAccount = await prisma.account.update({
+      where: {
+        id: accountId,
+      },
+      data: updatedData,
+    });
+  
+    return updatedAccount;
   }
 
   export async function deleteAccount(accountId: string) {
@@ -65,24 +75,26 @@ export async function createAccount(userId: string, accountType: string, targetN
           select: { targetId: true },
         });
 
-        console.log(account);
   
         if (!account) {
           throw new Error(`Account with ID ${accountId} not found.`);
         }
   
-        const targetId = account.targetId;
-        console.log(targetId);
-  
         // Delete the relationships from AccountsOnUsers
         await prisma.accountsOnUsers.deleteMany({
           where: { accountId: accountId },
         });
+
+        var deletedTarget;
+
+        if (account.targetId) {
+          const targetId = account.targetId;
   
-        // Delete the target associated with the account
-        const deletedTarget = await prisma.target.delete({
-          where: { id: targetId },
-        });
+          // Delete the target associated with the account
+          deletedTarget = await prisma.target.delete({
+            where: { id: targetId },
+          });
+        }
   
         // Delete the account
         const deletedAccount = await prisma.account.delete({
