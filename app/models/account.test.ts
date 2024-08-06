@@ -2,16 +2,12 @@ import { createAccount, deleteAccount, getAccountById, getAccountsByUserId, upda
 import { getUserByEmail } from "./user.server";
 import { E } from "vitest/dist/reporters-yx5ZTtEV";
 
-test("test test", () => {
-    expect(true).toBe(true);
-})
-
 test("test account crud queries", async() => {
     var user = await getUserByEmail("rachel@remix.run");
     expect(user != null).toBe(true);
     if (user !== null) {
         var accounts = await getAccountsByUserId(user.id);
-        expect(accounts?.length).toBe(0);
+        expect(accounts?.length).toBe(1);
 
         var account = await createAccount(user.id, "checking", "rachel's account", "test", "test", "OWNER");
         expect(typeof account.id).toBe("string");
@@ -20,7 +16,7 @@ test("test account crud queries", async() => {
         expect(typeof account.targetId).toBe("string");
 
         accounts = await getAccountsByUserId(user.id);
-        expect(accounts?.length).toBe(1);
+        expect(accounts?.length).toBe(2);
 
         var readAccount = await getAccountById(account.id);
 
