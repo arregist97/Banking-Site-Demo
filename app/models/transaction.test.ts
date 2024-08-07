@@ -6,26 +6,31 @@ test("test test", () => {
 })
 
 test("test crud methods for transactions", async() => {
-    const accountId = "clzip0ose0000tzuojhlqgamf";
-    const targetId = "clzip2a4x0001tzuolfk2ec1i";
+    const accountId = 1;
+    const targetId = 1;
 
     var transaction = await createTransaction(accountId, targetId, 10);
 
-    expect(typeof transaction.accountId).toBe("string");
+    expect(typeof transaction.id).toBe("number");
+    expect(typeof transaction.uid).toBe("string");
+    expect(typeof transaction.accountId).toBe("number");
     expect(typeof transaction.time).toBe("object");
-    expect(typeof transaction.targetId).toBe("string");
+    expect(typeof transaction.targetId).toBe("number");
     expect(typeof transaction.amount).toBe("number");
     expect(typeof transaction.revertStatus).toBe("string");
 
+    let revertStatus = 'LOCKED' as const
     const updatedData = {
         amount: 5,
-        revertStatus: 'LOCKED'
+        revertStatus
     }
-    transaction = await updateTransaction(accountId, transaction.time, targetId, updatedData);
+    transaction = await updateTransaction(transaction.id, updatedData);
 
-    expect(typeof transaction.accountId).toBe("string");
+    expect(typeof transaction.id).toBe("number");
+    expect(typeof transaction.uid).toBe("string");
+    expect(typeof transaction.accountId).toBe("number");
     expect(typeof transaction.time).toBe("object");
-    expect(typeof transaction.targetId).toBe("string");
+    expect(typeof transaction.targetId).toBe("number");
     expect(typeof transaction.amount).toBe("number");
     expect(typeof transaction.revertStatus).toBe("string");
 
@@ -33,11 +38,13 @@ test("test crud methods for transactions", async() => {
 
     expect(transactions.length).toBe(1);
 
-    var deletedTransaction = await deleteTransaction(accountId, transaction.time, targetId);
+    var deletedTransaction = await deleteTransaction(transaction.id);
 
-    expect(typeof deletedTransaction.accountId).toBe("string");
+    expect(typeof deletedTransaction.id).toBe("number");
+    expect(typeof deletedTransaction.uid).toBe("string");
+    expect(typeof deletedTransaction.accountId).toBe("number");
     expect(typeof deletedTransaction.time).toBe("object");
-    expect(typeof deletedTransaction.targetId).toBe("string");
+    expect(typeof deletedTransaction.targetId).toBe("number");
     expect(typeof deletedTransaction.amount).toBe("number");
     expect(typeof deletedTransaction.revertStatus).toBe("string");
 })

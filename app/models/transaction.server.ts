@@ -3,7 +3,7 @@ import { prisma } from "~/db.server";
 export type { Transaction } from "@prisma/client";
 
 
-export async function getTransactionsByAccountOrTarget(accountId: string) {
+export async function getTransactionsByAccountOrTarget(accountId: number) {
     try {
       // First, fetch the account to get its associated targetId
       const account = await prisma.account.findUnique({
@@ -45,8 +45,8 @@ export async function getTransactionsByAccountOrTarget(accountId: string) {
 }
 
 export async function createTransaction(
-    accountId: string,
-    targetId: string,
+    accountId: number,
+    targetId: number,
     amount: number
 ) {
     return prisma.transaction.create({
@@ -69,35 +69,23 @@ export async function createTransaction(
     )
 }
 
-export async function updateTransaction(accountId: string, time: Date, targetId: string, updatedData: {
+export async function updateTransaction(transactionId: number, updatedData: {
   amount?: number;
   revertStatus?: 'NOT_REQUESTED' | 'REQUESTED' | 'REVERTED' | 'LOCKED';
   time?: Date;
 }) {
   const updatedTransaction = await prisma.transaction.update({
-    where: {
-      accountId_time_targetId: {
-        accountId: accountId,
-        time: time,
-        targetId: targetId,
-      },
-    },
+    where: { id: transactionId },
     data: updatedData,
   });
 
   return updatedTransaction;
 }
 
-export async function deleteTransaction(accountId: string, time: Date, targetId: string) {
+export async function deleteTransaction(transactionId: number) {
     try {
       const deletedTransaction = await prisma.transaction.delete({
-        where: {
-          accountId_time_targetId: {
-            accountId: accountId,
-            time: time,
-            targetId: targetId,
-          },
-        },
+        where: { id: transactionId }
       });
   
       return deletedTransaction;

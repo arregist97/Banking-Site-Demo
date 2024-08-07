@@ -4,11 +4,11 @@ import { prisma } from "~/db.server";
 
 export type { Account } from "@prisma/client";
 
-export async function getAccountById(id: string) {
+export async function getAccountById(id: number) {
   return prisma.account.findUnique({ where: { id } });
 }
 
-export async function getAccountsByUserId(userId: string) {
+export async function getAccountsByUserId(userId: number) {
   const userWithAccounts = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -27,7 +27,7 @@ export async function getAccountsByUserId(userId: string) {
   return accounts
 }
 
-export async function createAccount(userId: string, accountType: string, targetName: string, routingNumber: string, transitNumber: string, userPermissions: 'VIEW' | 'DEPOSIT' | 'FULL_ACCESS' | 'OWNER') {
+export async function createAccount(userId: number, accountType: string, targetName: string, routingNumber: string, transitNumber: string, userPermissions: 'VIEW' | 'DEPOSIT' | 'FULL_ACCESS' | 'OWNER') {
   const account = await prisma.account.create({
     data: {
       type: accountType,
@@ -50,10 +50,10 @@ export async function createAccount(userId: string, accountType: string, targetN
   return account;
 }
 
-  export async function updateAccount(accountId: string, updatedData: {
+  export async function updateAccount(accountId: number, updatedData: {
     type?: string;
     currentBalance?: number;
-    targetId?: string;
+    targetId?: number;
   }) {
     const updatedAccount = await prisma.account.update({
       where: {
@@ -65,7 +65,7 @@ export async function createAccount(userId: string, accountType: string, targetN
     return updatedAccount;
   }
 
-  export async function deleteAccount(accountId: string) {
+  export async function deleteAccount(accountId: number) {
     try {
       // Start a transaction
       const result = await prisma.$transaction(async (prisma) => {

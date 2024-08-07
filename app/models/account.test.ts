@@ -10,20 +10,22 @@ test("test account crud queries", async() => {
         expect(accounts?.length).toBe(1);
 
         var account = await createAccount(user.id, "checking", "rachel's account", "test", "test", "OWNER");
-        expect(typeof account.id).toBe("string");
+        expect(typeof account.id).toBe("number");
+        expect(typeof account.uid).toBe("string");
         expect(typeof account.type).toBe("string");
         expect(typeof account.currentBalance).toBe("number");
-        expect(typeof account.targetId).toBe("string");
+        expect(typeof account.targetId).toBe("number");
 
         accounts = await getAccountsByUserId(user.id);
         expect(accounts?.length).toBe(2);
 
         var readAccount = await getAccountById(account.id);
 
-        expect(typeof readAccount?.id).toBe("string");
+        expect(typeof readAccount?.id).toBe("number");
+        expect(typeof readAccount?.uid).toBe("string");
         expect(typeof readAccount?.type).toBe("string");
         expect(typeof readAccount?.currentBalance).toBe("number");
-        expect(typeof readAccount?.targetId).toBe("string");
+        expect(typeof readAccount?.targetId).toBe("number");
 
         var deletedAccount = await deleteAccount(account.id);
         expect(deletedAccount != null).toBe(true);
