@@ -1,15 +1,11 @@
-import { time } from "console";
 import { createTransaction, updateTransaction, getTransactionsByAccountOrTarget, deleteTransaction } from "./transaction.server";
 
-test("test test", () => {
-    expect(true).toBe(true);
-})
 
-test("test crud methods for transactions", async() => {
+test("crud methods for transactions", async() => {
     const accountId = 1;
     const targetId = 1;
 
-    var transaction = await createTransaction(accountId, targetId, 10);
+    const transaction = await createTransaction(accountId, targetId, 10);
 
     expect(typeof transaction.id).toBe("number");
     expect(typeof transaction.uid).toBe("string");
@@ -19,26 +15,26 @@ test("test crud methods for transactions", async() => {
     expect(typeof transaction.amount).toBe("number");
     expect(typeof transaction.revertStatus).toBe("string");
 
-    let revertStatus = 'LOCKED' as const
+    const revertStatus = 'LOCKED' as const
     const updatedData = {
         amount: 5,
         revertStatus
     }
-    transaction = await updateTransaction(transaction.id, updatedData);
+    const updatedTransaction = await updateTransaction(transaction.id, updatedData);
 
-    expect(typeof transaction.id).toBe("number");
-    expect(typeof transaction.uid).toBe("string");
-    expect(typeof transaction.accountId).toBe("number");
-    expect(typeof transaction.time).toBe("object");
-    expect(typeof transaction.targetId).toBe("number");
-    expect(typeof transaction.amount).toBe("number");
-    expect(typeof transaction.revertStatus).toBe("string");
+    expect(typeof updatedTransaction.id).toBe("number");
+    expect(typeof updatedTransaction.uid).toBe("string");
+    expect(typeof updatedTransaction.accountId).toBe("number");
+    expect(typeof updatedTransaction.time).toBe("object");
+    expect(typeof updatedTransaction.targetId).toBe("number");
+    expect(typeof updatedTransaction.amount).toBe("number");
+    expect(typeof updatedTransaction.revertStatus).toBe("string");
 
-    var transactions = await getTransactionsByAccountOrTarget(accountId);
+    const transactions = await getTransactionsByAccountOrTarget(accountId);
 
     expect(transactions.length).toBe(1);
 
-    var deletedTransaction = await deleteTransaction(transaction.id);
+    const deletedTransaction = await deleteTransaction(transaction.id);
 
     expect(typeof deletedTransaction.id).toBe("number");
     expect(typeof deletedTransaction.uid).toBe("string");

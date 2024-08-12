@@ -97,7 +97,7 @@ export async function transfer(fromId: number, toId: number, amount: number) {
         throw new Error("Error creating transaction.");
     }
 
-    var updatedFromData = {
+    const updatedFromData = {
         currentBalance: fromAccount.currentBalance - transfer.amount
     }
 
@@ -117,10 +117,10 @@ export async function transfer(fromId: number, toId: number, amount: number) {
     try {
         await updateAccount(toId, updatedToData);
     } catch {
-        var updatedFromData = {
+        const revertedFromData = {
             currentBalance: fromAccount.currentBalance + transfer.amount
         }
-        await updateAccount(fromId, updatedFromData);
+        await updateAccount(fromId, revertedFromData);
         const reverseData = {
             revertStatus: 'REVERTED' as const
         }

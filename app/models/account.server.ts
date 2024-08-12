@@ -95,16 +95,22 @@ export async function createAccount(userId: number, accountType: string, targetN
           where: { accountId: accountId },
         });
 
-        var deletedTarget;
-
-        if (account.targetId) {
-          const targetId = account.targetId;
-  
-          // Delete the target associated with the account
-          deletedTarget = await prisma.target.delete({
-            where: { id: targetId },
+        if (!account.targetId) {
+          // Delete the account
+          const deletedAccount = await prisma.account.delete({
+            where: { id: accountId },
           });
+    
+          // Return the deleted account and target details
+          return { deletedAccount };
         }
+
+        const targetId = account.targetId;
+  
+        // Delete the target associated with the account
+        const deletedTarget = await prisma.target.delete({
+          where: { id: targetId },
+        });
   
         // Delete the account
         const deletedAccount = await prisma.account.delete({
