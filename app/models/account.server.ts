@@ -27,6 +27,16 @@ export async function getAccountsByUserId(userId: number) {
   return accounts
 }
 
+export async function getAccountByTargetId(targetId: number) {
+  const account = await prisma.account.findUnique({
+    where: {
+      targetId: targetId
+    }
+  });
+
+  return account;
+}
+
 export async function createAccount(userId: number, accountType: string, targetName: string, routingNumber: string, transitNumber: string, userPermissions: 'VIEW' | 'DEPOSIT' | 'FULL_ACCESS' | 'OWNER') {
   const account = await prisma.account.create({
     data: {

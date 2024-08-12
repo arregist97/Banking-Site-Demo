@@ -2,6 +2,17 @@ import { prisma } from "~/db.server";
 
 export type { Transaction } from "@prisma/client";
 
+export async function getTransactionById(transactionId: number) {
+  return await prisma.transaction.findUnique({
+    where: {
+      id: transactionId,
+    },
+    include: {
+      target: true,
+      account: true,
+    },
+  });
+}
 
 export async function getTransactionsByAccountOrTarget(accountId: number) {
     try {

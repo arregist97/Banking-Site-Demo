@@ -1,25 +1,6 @@
 import { prisma } from "~/db.server";
 
 export type { Target } from "@prisma/client";
-
-export async function createTargetForUser(userId: number, targetData: {
-    name: string;
-    routingNumber: string;
-    transitNumber: string;
-  }) {
-    const target = await prisma.target.create({
-      data: {
-        name: targetData.name,
-        routingNumber: targetData.routingNumber,
-        transitNumber: targetData.transitNumber,
-        user: {
-          connect: { id: userId }, // Connect the target to the user using the user's ID
-        },
-      },
-    });
-  
-    return target;
-  }
   
 export async function getTargetByUserId(userId: number) {
     const userWithTarget = await prisma.user.findUnique({

@@ -24,6 +24,14 @@ export async function createUser(email: User["email"], password: string) {
           hash: hashedPassword,
         },
       },
+      target: {
+        create: {
+          name: "Target for user " + email,
+          routingNumber: "N/A",
+          transitNumber: "N/A",
+
+        },
+      },
     },
   });
 }
